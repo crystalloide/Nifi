@@ -1,7 +1,7 @@
 # Apache Nifi pour des TPs de formation dans un environnement Linux ou virtualisé ou en ligne "Gitpod"
 
 
-## Rappel pour retrouver les environnements Gitpod éventuellement précédemment instanciés : [ https://gitpod.io/workspaces ](https://gitpod.io/workspaces)
+### Rappel pour retrouver les environnements Gitpod éventuellement précédemment instanciés : [ https://gitpod.io/workspaces ](https://gitpod.io/workspaces)
 
 Nous allons installer un serveur stand alone Nifi sur un environnement virtuel accessible à partir d'un simple navigateur web, à des fins de développement et de formation. 
 
@@ -39,8 +39,9 @@ https://dlcdn.apache.org/nifi/2.0.0-M4/nifi-2.0.0-M4-bin.zip
 ## Dans un terminal Git Bash : 
 ###########################################################################################################
 
-cd ~
-pwd
+    cd ~
+
+    pwd
 
 ## /home/gitpod
 
@@ -49,43 +50,47 @@ pwd
 
 
 ###########################################################################################################
-## I.1°) Pre-requis : Installation du JDK Java 11 : 
+## I.1°) Pre-requis : Installation du JDK Java 21 : 
 ###########################################################################################################
 
 ###########################################################################################################
 ## Installation jdk Java 21 : 
-
 ## Pour Linux : OpenJDK https://jdk.java.net/archive/
-##						https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-x64_bin.tar.gz
+##		https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-x64_bin.tar.gz
 ##
 ## Pour linux : JDK ORACLE : https://www.oracle.com/java/technologies/downloads/#java21
-##							 https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz
+##		https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz
 ###########################################################################################################
 
-cd ~
+    cd ~
 
-sudo rm jdk-21_linux-x64_bin.tar.gz
+    sudo rm jdk-21_linux-x64_bin.tar.gz
 
-sudo wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz
+    sudo wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz
 
-ll *.gz
+    ll *.gz
 
 
 ## Archive à décompresser : jdk-21_linux-x64_bin.tar.gz
 
 ## On décompresse :
-sudo tar -xzvf jdk-21_linux-x64_bin.tar.gz
+
+    sudo tar -xzvf jdk-21_linux-x64_bin.tar.gz
 
 ## On obtient dans notre cas un répertoire "jdk-11.0.1" dans notre répertoire courant :
-ls
-sudo rm -Rf ~/jdk
-mv jdk-21.0.4 jdk
+
+    ls
+
+    sudo rm -Rf ~/jdk
+
+    mv jdk-21.0.4 jdk
 
 ## sudo chmod -Rf 775 /jdk
 ## sudo chown -Rf gitpod:gitpod /jdk
 
 ## On vérifie que notre installation opérationnelle : 
-~/jdk/bin/java -version
+
+    ~/jdk/bin/java -version
 
 ## Affichage : 
 	Picked up JAVA_TOOL_OPTIONS: -XX:+UseContainerSupport -XX:ActiveProcessorCount=1
@@ -99,11 +104,14 @@ mv jdk-21.0.4 jdk
 ## export PATH=$JAVA_HOME/bin:$PATH
 
 ## Ajout du répertoire dans le PATH :
-export JAVA_HOME=~/jdk 
-export PATH=~/jdk/bin:$PATH
+
+    export JAVA_HOME=~/jdk 
+    
+    export PATH=~/jdk/bin:$PATH
 
 
-java -version
+    java -version
+    
 ## Affichage : 
 	Picked up JAVA_TOOL_OPTIONS: -XX:+UseContainerSupport -XX:ActiveProcessorCount=1
 	java version "21.0.4" 2024-07-16 LTS
@@ -116,27 +124,30 @@ java -version
 ###########################################################################################################
 ## I.2°) Nettoyage des installations précédentes éventuelles :  
 ###########################################################################################################
-cd ~
-rm -Rf nifi
+
+    cd ~
+    
+    rm -Rf nifi
 
 
 
 ###########################################################################################################
 ## I.3°) Installation de Nifi 2.0 :  
 ###########################################################################################################
-cd ~
 
-rm nifi-2.0.0-M4-bin.zip
+    cd ~
 
-wget https://dlcdn.apache.org/nifi/2.0.0-M4/nifi-2.0.0-M4-bin.zip
+    rm nifi-2.0.0-M4-bin.zip
 
-ll *.zip
+    wget https://dlcdn.apache.org/nifi/2.0.0-M4/nifi-2.0.0-M4-bin.zip
 
-unzip nifi-2.0.0-M4-bin.zip
+    ll *.zip
 
-mv nifi-2.0.0-M4 nifi
+    unzip nifi-2.0.0-M4-bin.zip
 
-cd nifi
+    mv nifi-2.0.0-M4 nifi
+
+    cd nifi
 
 
 ## cd ~
@@ -149,7 +160,9 @@ ls ~/nifi/
 	bin/  conf/  docs/  extensions/  lib/  LICENSE  NOTICE  python/  README
 
 ## On constate qu'à l'issue de la toute 1ère installation, il y a peu de répertoires présents.
+
 ## Certains répertoires/fichiers seront crées au tout 1er lancement 
+
 ## (d'où le délai nécessaire constaté au 1er lancement de Nifi ) 
 
 ## On ajoute les binaires nifi au PATH : 
@@ -158,8 +171,9 @@ export PATH=~/nifi/bin:$PATH
 echo $PATH
 
 
-i## Version de python installée : 
-python --version
+## Version de python installée : 
+    python --version
+    
 ## Affichage : 
 	Python 3.12.4
 
@@ -297,7 +311,5 @@ https://localhost:8443/nf
 
 ## Voir plus d'information ici : https://community.cloudera.com/t5/Support-Questions/Testing-Nifi-2-0-0M4-New-UI-Initial-Comments-amp/m-p/388032
 
-###########################################################################################################
-## Fin du TP01 
 ###########################################################################################################
 # Have fun !
