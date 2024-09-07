@@ -1,193 +1,198 @@
-# Cluster cassandra "formation" dans un environnement virtualisé "Gitpod"
-
-Notre cluster de démonstration contient 6 noeuds en tout : 
-- 3 noeuds sur le Datacenter 1
-- 3 noeuds sur le Datacenter 2
+# Apache Nifi pour des TPs de formation dans un environnement Linux ou virtualisé ou en ligne "Gitpod"
 
 
-## Rappel pour retrouver les environnements éventuellement précédemment instanciés dans Gitpod : [ https://gitpod.io/workspaces ](https://gitpod.io/workspaces)
+## Rappel pour retrouver les environnements Gitpod éventuellement précédemment instanciés : [ https://gitpod.io/workspaces ](https://gitpod.io/workspaces)
 
-Nous allons installer un cluster Cassandra à 6 nœuds et 2 Datacenters sur un environnement virtuel accessible à partir d'un simple navigateur web, à des fins de développement et de formation. 
+Nous allons installer un serveur stand alone Nifi sur un environnement virtuel accessible à partir d'un simple navigateur web, à des fins de développement et de formation. 
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/crystalloide/Cassandra-Cluster_6_noeuds_2_DC-Gitpod
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/crystalloide/Nifi
 )
 
-### 0°) Pré-requis (déjà fait ici)  :
+###########################################################################################################
+### 0°) Installation de JDK Java 21 LTS  :
+###########################################################################################################
 
-  Sur une VM ou machine sans installation préalable, on aurait dû installer Docker / Docker Compose : 
-  
-  On aurait suivi les instructions d’installation ici : https://docs.docker.com/compose/install
+## On installe le JDK 21 LTS via la commande : 
 
-  Puis on aurait récupéré le fichier docker-compose.yml :  [docker-compose.yml](https://github.com/crystalloide/Cassandra-Cluster_6_noeuds_2_DC-Gitpod/blob/main/docker-compose.yml)  
-  
-      curl -O https://github.com/crystalloide/Cassandra-Cluster_6_noeuds_2_DC-Gitpod/blob/82d81861de3040b262d8b5c265cf80283e40c7c9/docker-compose.yml
+sudo apt-get install openjdk-21-jdk
 
-### 1°)	Lancement du cluster :
+###########################################################################################################
+## 1°) Vérifions que Java est bien installé : 
+###########################################################################################################
 
-    docker compose up -d
+java -version
 
-###	2°) Pour lister l'image récupérée  :
+## Affichage : 
 
-    docker images
+	java version "17.0.3.1" 2022-04-22 LTS
+	Java(TM) SE Runtime Environment (build 17.0.3.1+2-LTS-6)
+	Java HotSpot(TM) 64-Bit Server VM (build 17.0.3.1+2-LTS-6, mixed mode, sharing)
+ 
+###########################################################################################################
+## I°) 	Installation mode stand alone sans zookeeper : 
+##		Site : https://nifi.apache.org/download/
+###########################################################################################################
 
-### 3°) Attendre quelques minutes que les conteneurs démarrent
+## Aller sur le paragraphe "binaries" et cliquer sur la ligne "NiFi Standard 2.0.0-M3" (car M3 disponible au 31-05-2024)
 
-### 4°) Affichage des conteneurs et vérification qu'ils sont bien en cours d'exécution : 
+## A savoir : "M" = Milestone
 
-    docker ps -a 
+## Nous arrivons sur la page : https://www.apache.org/dyn/closer.lua?path=/nifi/2.0.0-M3/nifi-2.0.0-M3-bin.zip
 
-### 5°) Affichage des logs d'un des conteneurs en cours d'exécution : 
-
-    docker logs cassandra-cluster_6_noeuds_2_dc-gitpod-cassandra11-1
-
-### 6°) Surveillance d'un cluster Cassandra dans Docker :
-
-nodetool est un programme en ligne de commande qui offre un large choix sur la façon d'examiner le cluster, de comprendre son activité et de le modifier.
-
-nodetool permet d'obtenir des statistiques sur le cluster, de voir les plages de token maintenus par chaque nœud et les diverses tâches de gestion
-
-(ex. : déplacement de données d'un nœud à un autre, la mise hors service de nœuds, la réparation de nœuds, etc.)
-
-### 7°) Utilisation de nodetool : On peut utiliser la commande "nodetool status" sur n'importe lequel des nœuds pour voir l'état des nœuds du cluster :
-    docker exec -it cassandra-cluster_6_noeuds_2_dc-gitpod-cassandra11-1 nodetool status
-
-### Affichage :
-    Datacenter: dc1
-    ===============
-    Status=Up/Down
-    |/ State=Normal/Leaving/Joining/Moving
-    --  Address     Load        Tokens  Owns (effective)  Host ID                               Rack 
-    UN  172.18.0.6  75.19 KiB   16      59.3%             3d8f189c-ad47-4b1e-8ea8-c004c0cd95b5  rack1
-    UN  172.18.0.7  75.19 KiB   16      76.0%             f4539d5f-6e29-417a-b2c2-f59d72101120  rack2
-    UN  172.18.0.2  109.38 KiB  16      64.7%             e415bf87-8f58-41c3-b3be-ee800006a71c  rack0
+## Ce qui nous donne finalement le lien de téléchargement suivant : 
+https://dlcdn.apache.org/nifi/2.0.0-M3/nifi-2.0.0-M3-bin.zip
 
 
-### 8°) Pour vérifier le bon démarrage du service cassandra sur un noeud : 
 
-    docker logs cassandra-cluster_6_noeuds_2_dc-gitpod-cassandra22-1 | grep 'jump'
+###########################################################################################################
+## On se place sur le répertoire souhaité d'installation : 
+## Dans un terminal Git Bash : 
+###########################################################################################################
 
-### 9°) Affichage des services en cours d'écoute sur les ports 904* :	
+cd a:
 
-   On installe netstat : 
-
-    sudo apt-get install net-tools
-    
-   Et ensuite : 
-
-    netstat -l | grep 904
+pwd
 
 
-### 10°) La commandes "nodetool info" apporte des informations complémentaires :
-    docker exec -it cassandra-cluster_6_noeuds_2_dc-gitpod-cassandra11-1 nodetool info
 
 
-### Affichage :
+###########################################################################################################
+## I.1°) Pre-requis : Installation de Java 21 : 
+###########################################################################################################
 
-    ID                     : f4539d5f-6e29-417a-b2c2-f59d72101120
-    Gossip active          : true
-    Native Transport active: true
-    Load                   : 75.19 KiB
-    Generation No          : 1692971004
-    Uptime (seconds)       : 702
-    Heap Memory (MB)       : 87.96 / 251.00
-    Off Heap Memory (MB)   : 0.00
-    Data Center            : dc1
-    Rack                   : rack2
-    Exceptions             : 0
-    Key Cache              : entries 11, size 984 bytes, capacity 12 MiB, 104 hits, 122 requests, 0.852 recent hit rate, 14400 save period in seconds
-    Row Cache              : entries 0, size 0 bytes, capacity 0 bytes, 0 hits, 0 requests, NaN recent hit rate, 0 save period in seconds
-    Counter Cache          : entries 0, size 0 bytes, capacity 6 MiB, 0 hits, 0 requests, NaN recent hit rate, 7200 save period in seconds
-    Network Cache          : size 8 MiB, overflow size: 0 bytes, capacity 15 MiB
-    Percent Repaired       : 100.0%
-    Token                  : (invoke with -T/--tokens to see all 16 tokens)
+###########################################################################################################
+## Installation jdk Java 21 : 
+## https://www.oracle.com/java/technologies/downloads/#java21
+## Pour windows : https://www.oracle.com/java/technologies/downloads/#jdk21-windows
+###########################################################################################################
 
 
-### 11°) Connection sur un conteneur en bash : 
+## Archive à décompresser : https://download.oracle.com/java/21/latest/jdk-21_windows-x64_bin.zip
 
-    docker exec -it cassandra-cluster_6_noeuds_2_dc-gitpod-cassandra11-1 bash
+## On décompresse et on obtient dans notre cars un répertoire "jdk-21.0.3" dans a:
 
-### 12°) Et on navigue : 
 
-    cd /opt/cassandra/conf
+## On va exporter un JAVA_HOME dans le terminal Git Bash : 
 
-   On affiche le contenu du répertoire de configuration du conteneur :  
-   
-    ls
+export JAVA_HOME='/a/jdk-21.0.3'
 
-   On affiche le contenu du fichier cassandra-env.sh :     
-   
-    cat cassandra-env.sh
+echo $JAVA_HOME
+## Affichage : 
+	/a/jdk-21.0.3
 
-   On affiche le contenu du fichier cassandra.yaml :   
-   
-    cat cassandra.yaml
 
-  Et plus particulièrement, on regarde la valeur du paramètre endpoint_snitch :
-    
-    cat cassandra.yaml | grep endpoint_snitch
-    
-- Noter :
+/a/jdk-21.0.3/bin/java -version
+## Affichage : 
+	java version "21.0.3" 2024-04-16 LTS
+	Java(TM) SE Runtime Environment (build 21.0.3+7-LTS-152)
+	Java HotSpot(TM) 64-Bit Server VM (build 21.0.3+7-LTS-152, mixed mode, sharing)
 
-     endpoint_snitch -- Set this to a class that implements
 
-     endpoint_snitch: GossipingPropertyFileSnitch
+export PATH=$JAVA_HOME/bin:$PATH
 
-      cat cassandra-rackdc.properties
-  
-- Noter : GossipingPropertyFileSnitch
+echo $PATH
 
-On pense à sortir du conteneur : 
+java -version
+## Affichage : 
+	java version "21.0.3" 2024-04-16 LTS
+	Java(TM) SE Runtime Environment (build 21.0.3+7-LTS-152)
+	Java HotSpot(TM) 64-Bit Server VM (build 21.0.3+7-LTS-152, mixed mode, sharing)
+	
 
-    exit
 
-### 13°) Pour afficher les détails sur la répartition des ranges de tokens dans le ring , on utilise "nodetool ring" : 
+###########################################################################################################
+## I.2°) Nettoyage des installations précédentes éventuelles :  
+###########################################################################################################
+rm -Rf /Nifi
 
-    docker exec -it cassandra-cluster_6_noeuds_2_dc-gitpod-cassandra11-1 nodetool ring
+###########################################################################################################
+## I.3°) Installation de Nifi 2.0 :  
+###########################################################################################################
+## Wget pour windows : http://gnuwin32.sourceforge.net/packages/wget.htm
 
-### Affichage : 
-    Datacenter: dc1
-    ==========
-    Address          Rack        Status State   Load            Owns                Token                                       
-                                                                                    8972475839137452131                         
-    172.18.0.2       rack0       Up     Normal  109.38 KiB      64.66%              -9055590551661409925                        
-    172.18.0.7       rack2       Up     Normal  75.19 KiB       75.99%              -8608019211763529537                        
-    ....                      
-    172.18.0.7       rack2       Up     Normal  75.19 KiB       75.99%              8007190946676663489                         
-    172.18.0.2       rack0       Up     Normal  109.38 KiB      64.66%              8311780714600540032                         
-    172.18.0.7       rack2       Up     Normal  75.19 KiB       75.99%              8721486411074324482                         
-    172.18.0.6       rack1       Up     Normal  75.19 KiB       59.34%              8972475839137452131                         
-    
-      Warning: "nodetool ring" is used to output all the tokens of a node.
-      To view status related info of a node use "nodetool status" instead.
-  
+wget https://dlcdn.apache.org/nifi/2.0.0-M3/nifi-2.0.0-M3-bin.zip
 
-## 14°) Utilisation du client CQL en ligne de commande : cqlsh  
+unzip nifi-2.0.0-M3-bin.zip
+mv nifi-2.0.0-M3 Nifi
+ls a:/Nifi 
 
-    docker exec -it cassandra-cluster_6_noeuds_2_dc-gitpod-cassandra11-1 cqlsh
+## Affichage : 
+	bin/  conf/  docs/  extensions/  lib/  LICENSE  NOTICE  python/  README
 
-### Affichage : 
+## On constate quà l'issue de la toute 1ère installation, il y a peu de répertoires présents.
+## Certains répertoires/fichiers seront crées au tout 1er lancement (d'où le délai nécessaire constaté au 1er lancement de Nifi ) :
 
-    Connected to formation at 127.0.0.1:9042
-    [cqlsh 6.1.0 | Cassandra 4.1.3 | CQL spec 3.4.6 | Native protocol v5]
-    Use HELP for help.
 
-## 15°) Affichage des keyspaces présents : 
+export PATH=/a/Nifi/bin:$PATH
 
-    DESCRIBE KEYSPACES;
+echo $PATH
 
-### Affichage : 
-    cqlsh> DESCRIBE KEYSPACES;
-    
-    system       system_distributed  system_traces  system_virtual_schema
-    system_auth  system_schema       system_views 
-    
-### 16°) On sort de l'interpréteur CQL en ligne de commande :  
-    EXIT;
+###########################################################################################################
+## I.4°) Lancement de Nifi :  
+###########################################################################################################
 
-### Affichage : 
+cd a:
+cd /Nifi/bin
 
-    cqlsh> EXIT
-    gitpod /workspace/cassandra-cluster_6_noeuds_2_dc-gitpod-cassandra11-1 (main) $ 
+ls
+## Affichage : 
+	dump-nifi.bat  nifi.cmd  nifi.sh*  nifi-env.bat  nifi-env.cmd  nifi-env.sh*  run-nifi.bat  status-nifi.bat
+	
+	
+run-nifi.bat
+
+## Affichage : 
+2024-05-31 11:00:43,000 INFO [main] org.apache.nifi.bootstrap.Command Generated Self-Signed Certificate Expiration: 2024-07-30
+2024-05-31 11:00:43,003 INFO [main] org.apache.nifi.bootstrap.Command Generated Self-Signed Certificate SHA-256: 8A942A3EA32435BA6A1A717395E7BFDFEAEFA8BD2F511B5B8A0EA308D0B7BA3B
+2024-05-31 11:00:43,103 INFO [main] org.apache.nifi.bootstrap.Command Starting Apache NiFi...
+2024-05-31 11:00:43,103 INFO [main] org.apache.nifi.bootstrap.Command Working Directory: A:\Nifi
+2024-05-31 11:00:43,104 INFO [main] org.apache.nifi.bootstrap.Command Command: A:\jdk-21.0.3\bin\java.exe -classpath A:\Nifi\.\conf;A:\Nifi\.\lib\jcl-over-slf4j-2.0.13.jar;A:\Nifi\.\lib\jul-to-slf4j-2.0.13.jar;A:\Nifi\.\lib\log4j-over-slf4j-2.0.13.jar;A:\Nifi\.\lib\logback-classic-1.5.6.jar;A:\Nifi\.\lib\logback-core-1.5.6.jar;A:\Nifi\.\lib\nifi-api-2.0.0-M3.jar;A:\Nifi\.\lib\nifi-framework-api-2.0.0-M3.jar;A:\Nifi\.\lib\nifi-nar-utils-2.0.0-M3.jar;A:\Nifi\.\lib\nifi-per-process-group-logging-2.0.0-M3.jar;A:\Nifi\.\lib\nifi-properties-2.0.0-M3.jar;A:\Nifi\.\lib\nifi-property-utils-2.0.0-M3.jar;A:\Nifi\.\lib\nifi-python-framework-api-2.0.0-M3.jar;A:\Nifi\.\lib\nifi-runtime-2.0.0-M3.jar;A:\Nifi\.\lib\nifi-server-api-2.0.0-M3.jar;A:\Nifi\.\lib\nifi-stateless-api-2.0.0-M3.jar;A:\Nifi\.\lib\slf4j-api-2.0.13.jar -Xmx1g -Djava.awt.headless=true -Xms1g -Djavax.security.auth.useSubjectCredsOnly=true -Dsun.net.http.allowRestrictedHeaders=true -Djava.protocol.handler.pkgs=sun.net.www.protocol -Dcurator-log-only-first-connection-issue-as-error-level=true -Dnifi.properties.file.path=A:\Nifi\.\conf\nifi.properties -Dnifi.bootstrap.listen.port=54906 -Dapp=NiFi -Dorg.apache.nifi.bootstrap.config.log.dir=A:\Nifi\bin\..\\logs org.apache.nifi.NiFi
+2024-05-31 11:00:43,112 WARN [main] org.apache.nifi.bootstrap.Command Failed to set permissions so that only the owner can read pid file A:\Nifi\bin\..\run\nifi.pid; this may allows others to have access to the key needed to communicate with NiFi. Permissions should be changed so that only the owner can read this file
+2024-05-31 11:00:43,115 WARN [main] org.apache.nifi.bootstrap.Command Failed to set permissions so that only the owner can read status file A:\Nifi\bin\..\run\nifi.status; this may allows others to have access to the key needed to communicate with NiFi. Permissions should be changed so that only the owner can read this file
+2024-05-31 11:00:43,122 INFO [main] org.apache.nifi.bootstrap.Command Application Process [2844] launched
+
+...
+
+
+###########################################################################################################
+## I.5°) Connexion à l'UI de Nifi :  
+###########################################################################################################
+
+## Sur le navigateur web du poste : https://localhost:8443/nifi  ( Attention : Pas 127.0.0.1)
+## Remarque : il s'agit de l'URL de l'interface web traditionnelle, une nouvelle étant disponible
+
+## On arrive ici : https://localhost:8443/nifi/login
+
+## Nifi génère un login / mot de passe sécurisé par défaut, et que l'on peut retrouver ici :
+
+## Dans un nouveau terminal : 
+cd a:
+cat /a/Nifi/logs/nifi-app.log | grep 'Generated'
+
+## Affichage :
+Generated Username [9a2816d1-01a9-4394-9825-5b5db5ca82bf]
+Generated Password [MLAKVIqLy4S6kAoBKgB/st3L+8RtPoKc]
+
+## On indique ensuite ces informations dans la page de login de l'UI Nifi
+
+## Remarque, on voit au début du fichier de log nifi-app.log :
+...
+2024-05-31 11:00:57,959 INFO [main] o.a.n.a.s.u.SingleUserLoginIdentityProvider 
+Run the following command to change credentials: nifi.sh set-single-user-credentials USERNAME PASSWORD
+...
+
+
+
+###########################################################################################################
+## I.6°) La nouvelle UI apportée dans Nifi 2.0 :  
+###########################################################################################################
+
+## Comme évoqué précédemment, la nouvelle UI de Nifi 2.0 peut être testée ici, avec une URL spécifique :
+https://localhost:8443/nf
+
+## Le mode "sombre" a été notamment introduit mais pas seulement :-) 
+
+## Voir plus d'information ici : https://community.cloudera.com/t5/Support-Questions/Testing-Nifi-2-0-0M3-New-UI-Initial-Comments-amp/m-p/388032
 
 
 ## 17°) Pour arrêter le cluster :
