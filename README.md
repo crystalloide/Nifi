@@ -1,4 +1,4 @@
-# Apache Nifi pour des TPs de formation dans un environnement Linux ou virtualisé ou en ligne "Gitpod"
+### Apache Nifi pour des TPs de formation dans un environnement Linux ou virtualisé ou en ligne "Gitpod"
 
 ### Rappel pour retrouver les environnements Gitpod éventuellement précédemment instanciés : [ https://gitpod.io/workspaces ](https://gitpod.io/workspaces)
 
@@ -9,19 +9,19 @@ Nous allons installer un serveur stand alone Nifi sur un environnement virtuel a
 
 __________________________________________________________________________________
 ______________________________________
-## TP02a : Installation Apache Nifi 2.3.0 sur Linux : 
-## 		   https://nifi.apache.org/documentation/v2/
+#### TP : Installation Apache Nifi 2.3.0 sur Linux : 
+#### 		   https://nifi.apache.org/documentation/v2/
 ______________________________________
 
 ## JDK Java 21
-## Les proccesseurs basés sur Python (fonctionnalité beta) nécessitent: Python 3.9, 3.10, 3.11, ou 3.12
+## Les proccesseurs basés sur Python nécessitent: Python 3.9, 3.10, 3.11, ou 3.12
 
 ## VM à charger dans VirtualBox : Ubuntu_24.04.2_java_docker_python_2025-02-20.ova
 
 ______________________________________
 ## I°) 	Installation mode stand alone sans zookeeper : 
-##		Site : https://nifi.apache.org/download/
-##             https://dlcdn.apache.org/nifi/ 
+##	Site : https://nifi.apache.org/download/
+##      https://dlcdn.apache.org/nifi/ 
 ______________________________________
 ## Aller sur le paragraphe "binaries" et cliquer sur la ligne "NiFi Standard 2.3.0" 
 ## Nous arrivons sur la page : https://www.apache.org/dyn/closer.lua?path=/nifi/2.3.0/nifi-2.3.0-bin.zip
