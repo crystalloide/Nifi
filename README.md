@@ -9,10 +9,9 @@ Nous allons installer un serveur stand alone Nifi sur un environnement virtuel a
 )
 
 __________________________________________________________________________________
-###########################################################################################################
-## TP01 : Installation Apache Nifi 2.0 sur Linux : 
-## 		  https://nifi.apache.org/documentation/v2/
-###########################################################################################################
+___TP01 : Installation Apache Nifi 2.0 sur Linux : 
+___		  https://nifi.apache.org/documentation/v2/
+__________________________________________________________________________________
 
 ## JDK Java 21
 ## Les proccesseurs basés sur Python (fonctionnalité beta) nécessitent: 
